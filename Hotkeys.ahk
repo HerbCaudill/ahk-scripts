@@ -1,5 +1,6 @@
-#Include ./Secrets.ahk
-SetTitleMatchMode,2 ; match part of title
+SetTitleMatchMode, RegEx ; match part of title
+
+
 
 ; ================ A-Z HOTKEYS
 
@@ -52,7 +53,9 @@ Return
 
 #u::CopyBrowserURL()
 ^#u::CopyMarkdownLink()
-^!#u::WinGetClass, Clipboard, A ; Will copy the ahk_class of the Active Window to clipboard
+
+^!#u::WinGetActiveTitle, Clipboard ; Will copy the title of the Active Window to clipboard
+; ^!#u::WinGetClass, Clipboard, A ; Will copy the ahk_class of the Active Window to clipboard
 
 ; ^+v RESERVED Ditto 
 ^+!v::PastePlainText()
@@ -124,19 +127,18 @@ NumpadDel::Del
 ; Easy ways to minimize WhatsApp
 ; (for use with WhatsAppTray, which keeps it running in the background)
 ; https://github.com/D4koon/WhatsappTray/releases
-#IfWinActive WhatsApp 
+#IfWinActive, WhatsApp
   !F4::WinMinimize
   ^W::WinMinimize
   Esc::WinMinimize
 #IfWinActive 
 
-
 ; auto-reload when editing ahk
-#IfWinActive .ahk
-  ^s::
-    sleep, 200
-    Reload
-  return
+#IfWinActive ahk-scripts
+^s::
+  sleep, 200
+  Reload
+return
 #IfWinActive 
 
 
@@ -192,9 +194,8 @@ AddShortcut() {
 }
 
 AddAsanaTask() {
-  ; defined in Secrets.ahk
-  ; AsanaToken := "0/1234asfd1243asdf1243asfd" ; (Account Settings/Apps/API Key)
-  ; AsanaWorkspace := "12312341234123123" ; caudillweb.com
+  IniRead AsanaToken, Secrets.ini, Asana, Token
+  IniRead AsanaWorkspace, Secrets.ini, Asana, Workspace
   InputBox, UserInput, Task,Enter a task to add to Asana:,,350,125 
   If (!ErrorLevel and UserInput <> "")
   {
@@ -205,8 +206,7 @@ AddAsanaTask() {
  
 
 AddToDynalist() {
-  ; defined in Secrets.ahk
-  ; DynalistToken := "asdf1234-ASDFasdf1234asdfASDF1234ASFDasdf1234as--asdf12-ASDF1-ASDFasdf1234asdfA-ASDF1234asd-asdfasdf123-ASDF1234ASDF1234asdf1234"
+  IniRead DynalistToken, Secrets.ini, Dynalist, Token
   InputBox, UserInput, Task,Add to Dynalist inbox:,,350,125 
   If (!ErrorLevel and UserInput <> "")
   {
