@@ -76,7 +76,6 @@ Return
 
 ; ================ OTHER HOTKEYS
 
-
 #space::
   Run chrome.exe --new-window ; new browser window
   WinActivate, "New Tab" 
@@ -135,10 +134,10 @@ NumpadDel::Del
 
 ; auto-reload when editing ahk
 #IfWinActive ahk-scripts
-^s::
-  sleep, 200
-  Reload
-return
+  ^s::
+    sleep, 200
+    Reload
+  return
 #IfWinActive 
 
 

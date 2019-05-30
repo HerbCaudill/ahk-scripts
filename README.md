@@ -57,6 +57,7 @@ return
 Sometimes a person just needs a big whack of fake text. When I have that craving
 I just type `loremipsum` and I get this:
 
+<!-- cSpell:disable -->
 ```
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit.
 Pellentesque aliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id,
@@ -75,6 +76,7 @@ Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante,
 mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a,
 lacinia eu, vulputate vel, nisl.
 ```
+<!-- cSpell:enable -->
 
 Since this is so long, if you implement it as straight-up text expansion it will
 take a while to get all typed out. Instead I put it in the clipboard and then
@@ -148,8 +150,7 @@ cruft.
 
 ### AutoHotKeys for AutoHotKey
 
-I have a couple of definitions that help me work with AutoHotKey itself. Very
-meta.
+I have a couple of definitions that help me work with AutoHotKey itself. 
 
 This makes it easy for me to open this repo in VS Code:
 
@@ -159,14 +160,33 @@ This makes it easy for me to open this repo in VS Code:
 Return
 ```
 
-This forces AutoHotKey to reload every time I save a script. It works by
-checking
+This forces AutoHotKey to reload every time I save a script. (This assumes that the editor title contains the full path, and that the path includes `ahk-scripts`.)
 
-```
-#IfWinActive .ahk
+```ahk
+#IfWinActive ahk-scripts
   ^s::
     sleep, 200
     Reload
   return
-#IfWinActive
+#IfWinActive 
+```
+
+Sometimes that doesn't work - for example if I'm debugging that particular hotkey (third-level inception) - so as a backup, I can always force the script to reload with this hotkey: 
+
+```ahk
+^#r::Reload  
+```
+
+### Paste plain text
+
+When I need to strip formatting from text I've copied, this is quicker than round-tripping it through notepad:
+
+```ahk
+^+!v::PastePlainText()
+
+PastePlainText()  {
+  clipboard = %clipboard% ;  convert clipboard contents to plain text only
+  send ^v
+  return
+}
 ```
