@@ -19,37 +19,9 @@ Return
 ::meetmez::zoommtg://zoom.us/join?action=join&confno=6595567171&zc=0
 ::meetme::https://www.devresults.com/meet/herb
 
-::weeklyreview::
-	clipboard = 
-	(
-	Get clear
-		Brain dump/journal entry @wf
-			What's on your mind?
-			What's important this week?
-			What got done last week?
-		Move todos to Asana @wf
-		Clear notes @wf
-		Clear inbox @inbox or @iphone
-		Clear drafts @gmail
-		Clear @reminders
-		Office: Clear loose notes, papers and materials
-	Get current
-		Review previous journal entry @workflowy
-		Review my week @log @idt
-		Review team's week @idt
-		Review last week @gcal
-		Review this week @gcal
-	Get ready
-		Review project lists @asana
-		Review areas of focus, goals, vision, principles (quarterly)
-		Review & sort out existing tasks	
-	)
-	WinClip.Paste()
-return
-
 ::poaddr::
 (
-3509 Connecticut Ave, NW #210
+4401A Connecticut Ave, NW #239
 Washington, DC 20008
 )
 
