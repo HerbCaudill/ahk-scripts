@@ -54,7 +54,8 @@ Return
 ^#u::CopyMarkdownLink()
 ^!#u::WinGetClass, Clipboard, A ; Will copy the ahk_class of the Active Window to clipboard
 
-#v::PastePlainText()
+; ^+v RESERVED Ditto 
+^+!v::PastePlainText()
 ^#v::Run vault ; LastPass Vault
 
 #w::Run whatsapp 
