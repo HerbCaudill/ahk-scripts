@@ -1,161 +1,228 @@
-chrome := "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
-code := "C:\Program Files\Microsoft VS Code\code.exe"
-curl := "C:\Program Files\curl\amd64\curl.exe"
+#Include ./Secrets.ahk
+SetTitleMatchMode,2 ; match part of title
+
+; ================ A-Z HOTKEYS
+
+; #a RESERVED action center
+^#a::LookupSelection("https://www.amazon.es/s/field-keywords=~s~") ; look up on Amazon.es
+^#+a::LookupSelection("https://www.amazon.com/s/field-keywords=~s~") ; look up on Amazon.com
+
+; #b available
+
+#c::Run % "chrome.exe --app=https://mail.google.com/mail/?view=cm&fs=1&tf=1 --disable-extensions" ; gmail compose
+
+; #d RESERVED desktop
+
+; #e RESERVED explorer
+^#e:: ; edit AutoHotKey script
+  Run "C:\Users\herb\AppData\Local\Programs\Microsoft VS Code\Code.exe" C:\git\ahk-scripts\
+Return
+
+#f::Run dl ; dynalist
+^#f::AddToDynalist() 
+
+#g::Run daily ; dynalist log
+^#g::LookupSelection("http://www.google.com/search?q=~s~") ; look up on Google
+
+#h::Run devgit ; github
+
+; #i RESERVED settings
+
+#j:: run schtasks /run /TN "750"
+
+; #k RESERVED quick connect
+
+; #l RESERVED lock
+
+; #m available
+; #n available
+; #o available
+
+; #p RESERVED project screen
+^#p::Run chrome.exe --profile-directory=Default --app-id=pmcngklofgngifnoceehmchjlildnhkj ; Google Contacts
+
+#q::Run trans ; Google Translate
+
+; #r RESERVED run
+^#r::Reload  ; reload AutoHotKey script
+
+#s::AddShortcut()
+
+#t::AddAsanaTask() 
+
+#u::CopyBrowserURL()
+^#u::CopyMarkdownLink()
+^!#u::WinGetClass, Clipboard, A ; Will copy the ahk_class of the Active Window to clipboard
+
+#v::PastePlainText()
+^#v::Run vault ; LastPass Vault
+
+#w::Run whatsapp 
+
+^#w::LookupSelection("http://en.wikipedia.org/wiki/Special:Search?search=~s~") ; look up in Wikipedia
+^#+w::LookupSelection("https://github.com/DevResults/DevResults/search?q=~s~&type=Wikis") ; look up in DevResults wiki
+
+; #x RESERVED quick link
+
+; #y available
+
+#z:: Run "C:/Users/herb/AppData/Roaming/Zoom/bin/zoom.exe"
+^#z::Run https://cloudsearch.google.com/cloudsearch?authuser=0
 
 
-; ================ WIN
+; ================ OTHER HOTKEYS
 
 
-RWin Up::Send {AppsKey Up} ; right Windows key: context menu
+#space::
+  Run chrome.exe --new-window ; new browser window
+  WinActivate, "New Tab" 
+Return
 
-#space::Run %chrome% ; new chrome window
+^#space:: ; cycle through input keyboard
+  PostMessage WM_INPUTLANGCHANGEREQUEST:=0x50, INPUTLANGCHANGE_FORWARD:=0x2,,, % (hWndOwn := DllCall("GetWindow", Ptr, hWnd:=WinExist("A"), UInt, GW_OWNER := 4, Ptr)) ? "ahk_id" hWndOwn : "ahk_id" hWnd
+Return
 
-#F1::Run %chrome% --app=http://devdocs.io/ ; devdocs
-
-#`::Run sticky ; stickies
+#F1::Run chrome.exe --app=https://devdocs.io/ ; devdocs
 
 #=::Run calc.exe ; calculator
 
-#c::Run %chrome% --app=https://mail.google.com/mail/?view=cm&fs=1&tf=1 --disable-extensions ; gmail compose
+^#1::Run teams ; google team drives
+#!1::Run gdl ; my drive (online)
+^#!1::Run teamsl ; google team drives (online)
 
-#f::Run wf ; workflowy
-
-#g::Run log ; workflowy log
-
-#s:: ; create shortcut to chrome window or to folder
-	If WinActive("ahk_class CabinetWClass")	; folder
-	{	
-		Send ^l ; Select the address textbox
-		WinClip.Copy()
-		InputBox, UserInput, Shortcut Name,Please enter a name for this folder shortcut: `n%Clipboard%,,350,150 
-		If (!ErrorLevel and UserInput <> "")
-			FileCreateShortcut, %Clipboard%, \Win10\%UserInput%.lnk, 
-	}
-	Else If WinActive("ahk_class Chrome_WidgetWin_1") ; chrome
-	{
-		sURL := GetActiveBrowserURL()
-		InputBox, UserInput, Shortcut Name,Please enter a name for this Chrome app shortcut: `n%sURL%,,350,150 
-		If (!ErrorLevel and UserInput <> "")
-			FileCreateShortcut, %chrome%, G:\My Drive\Shortcuts\Win10\%UserInput%.lnk, , --app=%sURL%
-	}
-	Else Return
-Return
-
-#t:: ; add task to Asana
-	; NOTE: AsanaToken and AsanaWorkspace need to be defined in Secrets.ahk
-	; AsanaToken := 0/1234567890asdf1234567890asfd ; (Account Settings/Apps/API Key)
-	; AsanaWorkspace := 9999999999999 
-	InputBox, UserInput, Task,Enter a task to add to Asana:,,350,125 
-	If (!ErrorLevel and UserInput <> "")
-	{
-		UserInput := UriEncode(UserInput)
-		Run %curl% -H "Authorization: Bearer %AsanaToken%" https://app.asana.com/api/1.0/tasks -d "name=%UserInput%" -d "workspace=%AsanaWorkspace%" -d "assignee=me" --insecure
-	}
-Return
-
-#u:: ; copy active browser URL
-	sURL := GetActiveBrowserURL()
-	If (sURL != "")
-		clipboard = %sURL%
-Return
-
-#v:: ; connect to VPN
-	run rasphone "devresults-azure" -d
-	sleep, 1000 
-	send {ENTER}
-	sleep, 1000 
-	send {ENTER}
-	sleep, 10000 
-	send {ESC}
-Return
-
-#w::Run wa ; whatsapp
+^#2::LookupSelection("https://mail.google.com/mail/ca/u/0/#search/~s~") ; search email
 
 
-; ================ CTRL-WIN
-
-^#2:: ; search email
-	WinClip.Copy()
-	Run https://inbox.google.com/search/%Clipboard%
-Return
-
-^#a:: ; look up on Amazon
-	WinClip.Copy()
-  Run https://www.amazon.es/s/field-keywords=%Clipboard%
-Return
-
-^#e::Run %code% "G:\My Drive\Settings\AutoHotKey\AHK.ahk"
-
-^#g:: ; look up in Google
-	WinClip.Copy()
-  Run http://www.google.com/search?q=%Clipboard%
-Return
-
-^#r::Reload  ; reload AutoHotKey script
-
-^#w:: ; look up in Wikipedia
-	WinClip.Copy()
-  Run http://en.wikipedia.org/wiki/Special:Search?search=%Clipboard% 
-Return
-
-
-^#+w:: ; look up in devresults wiki
-	WinClip.Copy()
-  Run https://github.com/DevResults/DevResults/search?q=%Clipboard%&type=Wikis
-Return
-
-
-; ================ OTHER
 
 ; disable insert keys
 $Insert::return
 !Insert::Send, {Insert} ; Use Alt+Insert to toggle the 'Insert mode'
 
+; For Alt + key (with NumLock OFF)
+NumpadIns::Ins
+NumpadEnd::End
+NumpadDown::Down
+NumpadPgDn::PgDn
+NumpadLeft::Left
+NumpadClear::
+NumpadRight::Right
+NumpadHome::Home
+NumpadUp::Up
+NumpadPgUp::PgUp
+NumpadDel::Del
+
+; ================ APPLICATION SPECIFIC
+
 ; allow paste to command window
 #IfWinActive ahk_class ConsoleWindowClass
-^V::
-SendInput {Raw}%clipboard%
-return
+  ^v::
+  SendInput {Raw}%clipboard%
+  return
 #IfWinActive
 
+; Easy ways to minimize WhatsApp
+; (for use with WhatsAppTray, which keeps it running in the background)
+; https://github.com/D4koon/WhatsappTray/releases
+#IfWinActive WhatsApp 
+  !F4::WinMinimize
+  ^W::WinMinimize
+  Esc::WinMinimize
+#IfWinActive 
 
-; WIN KEY REFERENCE
 
-; KEEP:
-; #A action center
-; #. or #; emoji
-; #D desktop
-; #!D date/time
-; #^D add virtual desktop
-; #E explorer
-; #I settings
-; #K quick connect
-; #L lock
-; #P projector
-; #R run
-; #X quick link
-; #^F4 close virtual desktop
-; #tab task view
+; auto-reload when editing ahk
+#IfWinActive .ahk
+  ^s::
+    sleep, 200
+    Reload
+  return
+#IfWinActive 
 
-; AVAILABLE:
-; #, desktop peek
-; #B focus in notification area
-; #C cortana
-; #+C charms
-; #F feedback hub
-; #^F network search
-; #G game bar
-; #H dictation
-; #J focus tip
-; #M minimize all
-; #+M restore minimized
-; #O lock device orientation
-; #S search
-; #T cycle through taskbar
-; #U ease of use center
-; #V cycle through notifications
-; #+V cycle through notifications backwards
-; #Y windows mixed reality
-; #Z show commands in full-screen mode
-; #^enter narrator
-; #space input language/keyboard layout
+
+; ================ FUNCTIONS
+
+CopyBrowserURL() {
+  ; copy active browser URL
+  sURL := GetActiveBrowserURL()
+  If (sURL != "")
+    clipboard = %sURL%
+  Else
+    WinGetClass, Clipboard, A
+}
+
+CopyMarkdownLink() {
+  sURL := GetActiveBrowserURL()
+  If (sURL != "") 
+  {
+    WinGetActiveTitle, Title
+    link := "[" . Title . "](" . sURL . ")"
+    clipboard = %link%
+  }
+}
+
+PastePlainText()  {
+  clipboard = %clipboard% ;  convert clipboard contents to plain text only
+  send ^v
+  return
+}
+
+; create shortcut to chrome window or to folder
+AddShortcut() {
+  ; adapt these to your situation
+  BrowserPath := "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+  ShortcutDirectory := "G:\My Drive\Shortcuts\Win10"
+
+  If WinActive("ahk_class CabinetWClass")	; folder
+  {	
+    Send ^l ; Select the address textbox
+    WinClip.Copy()
+    InputBox, UserInput, Shortcut Name,Please enter a name for this folder shortcut: `n%Clipboard%,,350,150 
+    If (!ErrorLevel and UserInput <> "")
+      FileCreateShortcut, %Clipboard%, %ShortcutDirectory%/%UserInput%.lnk, 
+  }
+  Else If WinActive("ahk_class Chrome_WidgetWin_1") ; chrome
+  {
+    sURL := GetActiveBrowserURL()
+    InputBox, UserInput, Shortcut Name,Please enter a name for this Chrome app shortcut: `n%sURL%,,350,150 
+    If (!ErrorLevel and UserInput <> "")
+      FileCreateShortcut, %BrowserLocation%, %ShortcutDirectory%/%UserInput%.lnk, , --app=%sURL%
+  }
+  Else Return
+}
+
+AddAsanaTask() {
+  ; defined in Secrets.ahk
+  ; AsanaToken := "0/1234asfd1243asdf1243asfd" ; (Account Settings/Apps/API Key)
+  ; AsanaWorkspace := "12312341234123123" ; caudillweb.com
+  InputBox, UserInput, Task,Enter a task to add to Asana:,,350,125 
+  If (!ErrorLevel and UserInput <> "")
+  {
+    UserInput := UriEncode(UserInput)
+    Run curl -H "Authorization: Bearer %AsanaToken%" https://app.asana.com/api/1.0/tasks -d "name=%UserInput%" -d "workspace=%AsanaWorkspace%" -d "assignee=me" --insecure
+  }
+}
+ 
+
+AddToDynalist() {
+  ; defined in Secrets.ahk
+  ; DynalistToken := "asdf1234-ASDFasdf1234asdfASDF1234ASFDasdf1234as--asdf12-ASDF1-ASDFasdf1234asdfA-ASDF1234asd-asdfasdf123-ASDF1234ASDF1234asdf1234"
+  InputBox, UserInput, Task,Add to Dynalist inbox:,,350,125 
+  If (!ErrorLevel and UserInput <> "")
+  {
+    ; UserInput := UriEncode(UserInput)
+    URL := "https://dynalist.io/api/v1/inbox/add"
+    HttpObj := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+    HttpObj.Open("POST", URL, 0)
+    HttpObj.SetRequestHeader("Content-Type", "application/json")
+    Body := "{ ""token"": """ . DynalistToken . """, ""content"": """ . UserInput . """, ""checked"": false }"
+    HttpObj.Send(Body)
+    Result := HttpObj.ResponseText
+    Status := HttpObj.Status
+  }
+}
+ 
+LookupSelection(url) {
+  WinClip.Copy()
+  url := StrReplace(url, "~s~", Clipboard)
+  Run % url
+}

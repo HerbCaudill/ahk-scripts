@@ -1,10 +1,51 @@
+﻿::l.l::l·l ; Ela geminada 
+
+::<--::🡐
+::-->::🡒
+
 
 ::ttt:: ; Date stamp for file names
 FormatTime, DateStamp, %A_Now%, yyyyMMdd
 Send, %DateStamp% 
 Return 
 
-::meetme::zoommtg://zoom.us/join?action=join&confno=6595567171&zc=0
+::tttt:: ; Date stamp for daily log
+FormatTime, DateStamp, %A_Now%, ddd, MMM d 
+Send, %DateStamp% 
+Return 
+
+::shrugg::¯\_(ツ)_/¯
+
+::meetmez::zoommtg://zoom.us/join?action=join&confno=6595567171&zc=0
+::meetme::https://www.devresults.com/meet/herb
+
+::weeklyreview::
+	clipboard = 
+	(
+	Get clear
+		Brain dump/journal entry @wf
+			What's on your mind?
+			What's important this week?
+			What got done last week?
+		Move todos to Asana @wf
+		Clear notes @wf
+		Clear inbox @inbox or @iphone
+		Clear drafts @gmail
+		Clear @reminders
+		Office: Clear loose notes, papers and materials
+	Get current
+		Review previous journal entry @workflowy
+		Review my week @log @idt
+		Review team's week @idt
+		Review last week @gcal
+		Review this week @gcal
+	Get ready
+		Review project lists @asana
+		Review areas of focus, goals, vision, principles (quarterly)
+		Review & sort out existing tasks	
+	)
+	WinClip.Paste()
+return
 
 ::poaddr::
 (
@@ -56,7 +97,7 @@ Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorp
 ; -------------- zoom messages
 ::szoom::
 	WinClip.Clear()
-	Msg = Let's meet via Zoom at http://devresults.com/meet/herb . Use your computer's microphone and speakers (a headset works best), or call +1 669 900 6833 (meeting ID 659 556 7171).
+	Msg = Let's meet via Zoom at http://www.devresults.com/meet/herb . Use your computer's microphone and speakers (a headset works best), or call +1 669 900 6833 (meeting ID 659 556 7171).
 	HtmlMsg = <p>&nbsp;</p><div style='border:1px solid #aaa;background:#eee;padding:10px;font:12px/16px arial,helvetica,sans-serif;color:#555'>%Msg%</div><p>&nbsp;</p>
 	WinClip.SetText(Msg)
 	WinClip.SetHTML(HtmlMsg)
